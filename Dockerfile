@@ -37,7 +37,7 @@ RUN sbt publish-local
 WORKDIR /usr/src/
 ADD http://downloads.typesafe.com/typesafe-activator/1.2.10/typesafe-activator-1.2.10-minimal.zip /usr/src/
 RUN unzip typesafe-activator-1.2.10-minimal.zip
-RUN mv /usr/src/typesafe-activator-1.2.10-minimal /usr/src/activator
+RUN mv /usr/src/activator-1.2.10-minimal /usr/src/activator
 
 # xuc server
 WORKDIR /usr/src/
