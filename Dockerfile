@@ -9,8 +9,8 @@ ENV HOME /root
 VOLUME /ivy
 
 # Add dependencies
-RUN apt-get -qq update
-RUN apt-get -qq -y install \
+RUN apt-get update
+RUN apt-get -y install \
     wget \
     apt-utils \
     devscripts \
@@ -18,6 +18,8 @@ RUN apt-get -qq -y install \
     maven \
     openjdk-7-jdk
 
+#default to java 7
+RUN update-java-alternatives -s java-1.7.0-openjdk-amd64
 
 # XiVO javalib
 WORKDIR /usr/src/
