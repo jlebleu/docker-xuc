@@ -6,11 +6,14 @@ MAINTAINER XiVO Team "dev@avencall.com"
 ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
 
+VOLUME /ivy
+
 # Add dependencies
 RUN apt-get -qq update
 RUN apt-get -qq -y install \
     wget \
     apt-utils \
+    devscripts \
     git \
     maven \
     openjdk-7-jdk
@@ -18,7 +21,7 @@ RUN apt-get -qq -y install \
 
 # XiVO javalib
 WORKDIR /usr/src/
-RUN git clone https://gitorious.org/xivo/xivo-javactilib.git
+RUN git clone https://gitlab.com/xivo-utils/xivo-javactilib.git
 WORKDIR /usr/src/xivo-javactilib/
 RUN mvn install
 
@@ -34,25 +37,31 @@ RUN mv /usr/src/activator-1.2.10-minimal /usr/src/activator
 WORKDIR /usr/src/
 RUN git clone https://github.com/jirkah/metrics-play
 WORKDIR /usr/src/metrics-play
-RUN /usr/src/activator/activator publish-local
+RUN /usr/src/activator/activator -Dsbt.ivy.home=/ivy publish-local
 
 # xuc stats
 WORKDIR /usr/src/
 RUN git clone https://gitlab.com/xuc/xucstats.git
 WORKDIR /usr/src/xucstats
-RUN /usr/src/activator/activator publish-local
+RUN /usr/src/activator/activator -Dsbt.ivy.home=/ivy publish-local 
+
+# play-authentication
+WORKDIR /usr/src/
+RUN git clone https://gitlab.com/xivo-recording/play-authentication.git
+WORKDIR /usr/src/play-authentication
+RUN /usr/src/activator/activator -Dsbt.ivy.home=/ivy publish-local
 
 # xuc mod
 WORKDIR /usr/src/
 RUN git clone https://gitlab.com/xuc/xucmod.git
 WORKDIR /usr/src/xucmod
-RUN /usr/src/activator/activator publish-local
+RUN /usr/src/activator/activator -Dsbt.ivy.home=/ivy publish-local
 
 # xuc server
 WORKDIR /usr/src/
 RUN git clone https://gitlab.com/xuc/xucserver.git
 WORKDIR /usr/src/xucserver
-RUN /usr/src/activator/activator debian:genChanges
+RUN /usr/src/activator/activator -Dsbt.ivy.home=/ivy debian:genChanges
 
 WORKDIR /usr/src/xucserver/target
 RUN dpkg -i xuc_2.3.8_all.deb
